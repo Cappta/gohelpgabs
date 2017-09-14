@@ -39,3 +39,13 @@ func (container *Container) SetValueIfPathExists(path string, value interface{})
 		container.SetP(value, path)
 	}
 }
+
+// PopPath will search the Path for the value then delete it if it exists
+func (container *Container) PopPath(path string) *Container {
+	popped := container.Path(path)
+	if popped == nil {
+		return nil
+	}
+	container.DeleteP(path)
+	return &Container{popped}
+}
