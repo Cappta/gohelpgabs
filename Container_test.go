@@ -58,6 +58,57 @@ func TestContainer(t *testing.T) {
 						So(missingPaths, ShouldResemble, expectedOutput)
 					})
 				})
+				Convey("When popping Value", func() {
+					path := "Value"
+					value := container.PopPath(path)
+					Convey("Then value should no longer exist in container", func() {
+						So(container.ExistsP(path), ShouldBeFalse)
+					})
+					Convey("Then value's data should equal struct's value", func() {
+						So(value.Data(), ShouldEqual, sampleStruct.Value)
+					})
+				})
+				Convey("When popping NilValue", func() {
+					path := "NilValue"
+					value := container.PopPath(path)
+					Convey("Then value should no longer exist in container", func() {
+						So(container.ExistsP(path), ShouldBeFalse)
+					})
+					Convey("Then NilValue's data value should be nil", func() {
+						So(value.Data(), ShouldBeNil)
+					})
+				})
+				Convey("When popping MissingValue", func() {
+					path := "MissingValue"
+					value := container.PopPath(path)
+					Convey("Then MissingValue should not exist in container", func() {
+						So(container.ExistsP(path), ShouldBeFalse)
+					})
+					Convey("Then MissingValue should be nil", func() {
+						So(value, ShouldBeNil)
+					})
+				})
+				Convey("When searching Value", func() {
+					path := "Value"
+					value := container.Search(path)
+					Convey("Then value's data should equal struct's value", func() {
+						So(value.Data(), ShouldEqual, sampleStruct.Value)
+					})
+				})
+				Convey("When searching NilValue", func() {
+					path := "NilValue"
+					value := container.Search(path)
+					Convey("Then NilValue's data should be nil", func() {
+						So(value.Data(), ShouldBeNil)
+					})
+				})
+				Convey("When searching MissingValue", func() {
+					path := "MissingValue"
+					value := container.Search(path)
+					Convey("Then MissingValue should be nil", func() {
+						So(value, ShouldBeNil)
+					})
+				})
 				Convey("When setting Value if path exists", func() {
 					path := "Value"
 					value := "NewValue"
@@ -83,6 +134,12 @@ func TestContainer(t *testing.T) {
 					})
 				})
 			})
+		})
+	})
+	Convey("When creating a new container", t, func() {
+		container := New()
+		Convey("Then container should not be nil", func() {
+			So(container, ShouldNotBeNil)
 		})
 	})
 }
