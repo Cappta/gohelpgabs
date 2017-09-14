@@ -49,3 +49,15 @@ func (container *Container) PopPath(path string) *Container {
 	container.DeleteP(path)
 	return &Container{popped}
 }
+
+// Search - Attempt to find and return an object within the JSON structure by specifying the
+// hierarchy of field names to locate the target. If the search encounters an array and has not
+// reached the end target then it will iterate each object of the array for the target and return
+// all of the results in a JSON array.
+func (container *Container) Search(hierarchy ...string) *Container {
+	gabsContainer := container.Container.Search(hierarchy...)
+	if gabsContainer == nil {
+		return nil
+	}
+	return &Container{gabsContainer}
+}
