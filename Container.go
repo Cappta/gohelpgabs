@@ -7,6 +7,11 @@ type Container struct {
 	*gabs.Container
 }
 
+// New - Create a new gohelpgabs JSON object.
+func New() *Container {
+	return &Container{gabs.New()}
+}
+
 // ParseJSON parses a string into a representation of the parsed JSON in gabs and returns our container
 func ParseJSON(sample []byte) (container *Container, err error) {
 	gabsContainer, err := gabs.ParseJSON(sample)
