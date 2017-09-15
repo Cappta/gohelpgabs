@@ -7,6 +7,11 @@ type Container struct {
 	*gabs.Container
 }
 
+// New - Create a new gohelpgabs JSON object.
+func New() *Container {
+	return &Container{gabs.New()}
+}
+
 // ParseJSON parses a string into a representation of the parsed JSON in gabs and returns our container
 func ParseJSON(sample []byte) (container *Container, err error) {
 	gabsContainer, err := gabs.ParseJSON(sample)
@@ -33,4 +38,26 @@ func (container *Container) SetValueIfPathExists(path string, value interface{})
 	if container.ExistsP(path) {
 		container.SetP(value, path)
 	}
+}
+
+// PopPath will search the Path for the value then delete it if it exists
+func (container *Container) PopPath(path string) *Container {
+	popped := container.Path(path)
+	if popped == nil {
+		return nil
+	}
+	container.DeleteP(path)
+	return &Container{popped}
+}
+
+// Search - Attempt to find and return an object within the JSON structure by specifying the
+// hierarchy of field names to locate the target. If the search encounters an array and has not
+// reached the end target then it will iterate each object of the array for the target and return
+// all of the results in a JSON array.
+func (container *Container) Search(hierarchy ...string) *Container {
+	gabsContainer := container.Container.Search(hierarchy...)
+	if gabsContainer == nil {
+		return nil
+	}
+	return &Container{gabsContainer}
 }
